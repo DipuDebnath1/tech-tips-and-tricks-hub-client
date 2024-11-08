@@ -1,3 +1,20 @@
+export type TUserWithFollowers = {
+  createdAt: string;
+  email: string;
+  img: string;
+  isBlocked: boolean;
+  isPremium: boolean;
+  isVerified: boolean;
+  name: string;
+  phone: string;
+  role: "user" | "admin";
+  totalFollower: TUser[];
+  totalFollowing: TUser[];
+  updatedAt: string;
+  _id: string;
+  __v: number;
+};
+
 export type TUser = {
   createdAt: string;
   email: string;
@@ -8,8 +25,8 @@ export type TUser = {
   name: string;
   phone: string;
   role: "user" | "admin";
-  totalFollower: number;
-  totalFollowing: number;
+  totalFollower: string[];
+  totalFollowing: string[];
   updatedAt: string;
   _id: string;
   __v: number;
@@ -24,6 +41,7 @@ export interface TPost {
   category: string;
   tags: string[];
   isPremium: boolean;
+  isDeleted?: boolean;
   upVotes: string[];
   downVotes: string[];
   comments: number;
@@ -40,4 +58,19 @@ export interface TComment {
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+export interface TPostData {
+  title?: string;
+  content?: string;
+  images?: string;
+  category?:
+    | "Web"
+    | "Software Engineering"
+    | "AI"
+    | "Hardware"
+    | "Mobile Apps"
+    | "Tech Gadgets";
+  tags?: [string];
+  isPremium?: boolean;
 }

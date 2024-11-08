@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -5,38 +6,55 @@ import { TPost, TUser } from "@/utils/types";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { TokenDecode } from "@/utils/tokenDecode";
-import { useDownVotesMutation, useUpVotesMutation } from "@/redux/api/postsApi";
+import {
+  useDeletePostMutation,
+  useDownVotesMutation,
+  useUpVotesMutation,
+} from "@/redux/api/postsApi";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Comments from "./Comments";
 import { useAddCommentMutation } from "@/redux/api/commentApi";
+import { UpdatePost } from "./UpdatePost";
+import {
+  useFollowMutation,
+  useUnFollowMutation,
+  useUserDataQuery,
+} from "@/redux/api/userApi";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setUser } from "@/redux/userSlice";
+import { TokenDecode } from "@/utils/tokenDecode";
 
 const PostCard = ({
   data,
-  token,
   comment,
+  token,
 }: {
   data: TPost;
-  token?: any;
   comment?: true;
+  token?: string;
 }) => {
-  const [user, setUser] = useState<TUser>();
+  const decodeToken = TokenDecode(token || "");
   const [post, setPost] = useState<TPost>(data);
   const [showCommentBox, setShowCommentBox] = useState<boolean>(false);
   const router = useRouter();
-
+  const user = useAppSelector((state) => state.userSlice.user);
+  const dispatch = useAppDispatch();
+  const [addComment, { isLoading }] = useAddCommentMutation();
   const [upVote] = useUpVotesMutation();
   const [downVote] = useDownVotesMutation();
-  const [addComment, { isLoading }] = useAddCommentMutation();
+  const [follow] = useFollowMutation();
+  const [unFollow] = useUnFollowMutation();
+  const [deletePost] = useDeletePostMutation();
+  const { data: res } = useUserDataQuery(decodeToken._id);
 
   useEffect(() => {
-    const data = TokenDecode(token);
-    if (data) {
-      setUser(data);
+    if (res?.success) {
+      dispatch(setUser(res.data));
     }
-  }, [token]);
+  }, [res]);
 
   useEffect(() => {
     setPost(data);
@@ -96,6 +114,7 @@ const PostCard = ({
     setShowCommentBox(!showCommentBox);
   };
 
+  // handleAddComment;
   const handleAddComment = async (e: any) => {
     e.preventDefault();
     if (!user) {
@@ -114,8 +133,70 @@ const PostCard = ({
     }
   };
 
+  // handleFollow;
+  const handleFollow = async () => {
+    if (!user) {
+      return router.push("/login");
+    }
+    try {
+      const res = await follow({ followedId: post?.author?._id }).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "following failed");
+    }
+  };
+
+  // handle UN Follow;
+  const handleUnFollow = async () => {
+    if (!user) {
+      return router.push("/login");
+    }
+    try {
+      const res = await unFollow({ followedId: post.author._id }).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "following failed");
+    }
+  };
+
+  // handleDelete
+  const handleDelete = async (id: string) => {
+    // deletePost;
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Delete the Post",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res: any = await deletePost(id).unwrap();
+          //  && res?.data?.deletedCount > 0
+          if (res.success) {
+            toast.success(res.message || "post Deleted success");
+          }
+        }
+      });
+    } catch (err: any) {
+      toast.error(err.message || "post delete failed");
+    }
+  };
+
+  console.log({ user, post });
+
   return (
-    <div className="max-w-xl mx-auto p-6 border bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative">
+    <div
+      className={`max-w-xl mx-auto p-6 border bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative ${
+        post?.isDeleted && "border-red-600"
+      }`}
+    >
       {post.isPremium && (
         <p
           className="absolute top-2 right-2  bg-orange-600 p-1 px-2 rounded text-white text-sm"
@@ -134,12 +215,67 @@ const PostCard = ({
             height={48}
           />
         </Link>
-        <div className="ml-4">
-          <Link href={`/profile/${post.author._id}`}>
-            <h2 className="text-xl font-semibold cursor-pointer">
-              {post.author.name}
-            </h2>
-          </Link>
+        <div className="ml-4 ">
+          <div className="flex items-center gap-3">
+            <Link href={`/profile/${post.author._id}`}>
+              <h2 className="text-xl font-semibold cursor-pointer">
+                {post.author.name}
+              </h2>
+            </Link>
+            {user &&
+              user?._id !== post.author._id &&
+              !post.author.totalFollower.includes(user?._id) && (
+                <span
+                  onClick={handleFollow}
+                  className="text-blue-500 cursor-pointer"
+                >
+                  Follow
+                </span>
+              )}
+
+            {user &&
+              // user?._id !== post.author._id &&
+              post.author.totalFollower.includes(user?._id) && (
+                <span
+                  onClick={handleUnFollow}
+                  className="text-blue-500 cursor-pointer"
+                >
+                  Following
+                </span>
+              )}
+
+            {user && user._id == post.author._id && !post.isDeleted && (
+              <>
+                <UpdatePost postData={post} />
+                <button
+                  onClick={() => handleDelete(post._id)}
+                  className="text-red-600 underline cursor-pointer text-sm flex items-center gap-1"
+                >
+                  <span>Delete</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="size-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+                    />
+                  </svg>
+                </button>
+              </>
+            )}
+            {post?.isDeleted && (
+              <span className="text-red-500 font-semibold">
+                {" "}
+                Deleted this post
+              </span>
+            )}
+          </div>
           <p className="text-gray-500">
             {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
           </p>
@@ -147,9 +283,14 @@ const PostCard = ({
       </div>
       <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
       {!comment ? (
-        <p className="text-gray-700 mb-4">{post.content.slice(0, 70)} ...</p>
+        <div className="text-gray-700 mb-4">
+          {/* {post.content.slice(0, 70)} ... */}
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
       ) : (
-        <p className="text-gray-700 mb-4">{post.content}</p>
+        <div className="text-gray-700 mb-4">
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
       )}
       {post.images && (
         <div className="mb-4">
@@ -270,7 +411,7 @@ const PostCard = ({
       )}
       {comment && (
         <div>
-          <Comments postId={post._id} user={user as TUser} />
+          <Comments postId={post._id} user={user as TUser | null} />
         </div>
       )}
     </div>

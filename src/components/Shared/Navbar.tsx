@@ -51,7 +51,7 @@ const Navbar = ({ token }: any) => {
             </li>
             {user && (
               <li>
-                <Link href={"/dashboard"}>Dashboard</Link>
+                <Link href={`/${user.role}/dashboard`}>Dashboard</Link>
               </li>
             )}
             <li>
@@ -84,7 +84,7 @@ const Navbar = ({ token }: any) => {
                     <p>
                       <Link
                         className="block py-2 border-b px-4 hover:bg-gray-100"
-                        href={"/profile"}
+                        href={"/profile/me"}
                         onClick={() => setUserMenu(!userMenu)}
                       >
                         Profile
@@ -93,7 +93,7 @@ const Navbar = ({ token }: any) => {
                     <p>
                       <Link
                         className="block py-2 border-b px-4 hover:bg-gray-100"
-                        href={"/dashboard"}
+                        href={`/${user.role}/dashboard`}
                         onClick={() => setUserMenu(!userMenu)}
                       >
                         Dashboard
@@ -176,7 +176,7 @@ const Navbar = ({ token }: any) => {
                   <Link
                     onClick={() => setShowMenu(!showMenu)}
                     className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                    href={"/dashboard"}
+                    href={`/${user.role}/dashboard`}
                   >
                     Dashboard
                   </Link>
@@ -205,7 +205,7 @@ const Navbar = ({ token }: any) => {
                   <Link
                     onClick={() => setShowMenu(!showMenu)}
                     className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                    href={"/profile"}
+                    href={"/profile/me"}
                   >
                     Profile
                   </Link>

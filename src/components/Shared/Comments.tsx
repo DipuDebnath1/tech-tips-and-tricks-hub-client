@@ -9,7 +9,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const Comments = ({ postId, user }: { postId: string; user: TUser }) => {
+const Comments = ({ postId, user }: { postId: string; user: TUser | null }) => {
   const { data } = useFindAllCommentQuery(postId);
   const [deleteComment, { isLoading: isCommentDeleting }] =
     useDeleteCommentMutation();
@@ -73,7 +73,7 @@ const Comments = ({ postId, user }: { postId: string; user: TUser }) => {
                   </p>
                 </div>
                 <p>
-                  {user._id === comment.author._id && (
+                  {user && user._id === comment.author._id && (
                     <p
                       onClick={() => handleCommentDelete(comment._id)}
                       className="text-red-500"

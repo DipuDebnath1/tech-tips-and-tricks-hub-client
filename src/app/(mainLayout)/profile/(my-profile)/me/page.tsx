@@ -1,7 +1,7 @@
 import PostContent from "@/components/Shared/PostContent";
 import { getToken } from "@/utils/actions/auth";
 
-const UserDashboard = async () => {
+const userProfile = async () => {
   const token = await getToken();
   return (
     <div>
@@ -10,4 +10,4 @@ const UserDashboard = async () => {
   );
 };
 
-export default UserDashboard;
+export default userProfile;

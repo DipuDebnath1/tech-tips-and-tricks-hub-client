@@ -37,7 +37,7 @@ export default async function RootLayout({
         <ProviderContent>
           <Navbar token={token} />
           {children}
-          <Toaster position="top-right" />
+          <Toaster position="top-right" richColors />
         </ProviderContent>
       </body>
     </html>

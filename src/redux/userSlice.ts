@@ -1,8 +1,8 @@
-import { TUser } from "@/utils/types";
+import { TUserWithFollowers } from "@/utils/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TInitialState = {
-  user: null | TUser;
+  user: null | TUserWithFollowers;
 };
 
 const initialState: TInitialState = {
@@ -13,7 +13,7 @@ export const userSlice = createSlice({
   name: "user ",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<TUser>) => {
+    setUser: (state, action: PayloadAction<TUserWithFollowers>) => {
       state.user = action.payload;
     },
   },

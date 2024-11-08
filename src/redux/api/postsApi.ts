@@ -2,8 +2,35 @@ import { baseApi } from "./baseApi";
 
 const postsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // find all product
+    // add post
+    addPost: builder.mutation({
+      query: (data) => ({
+        url: "/posts",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["posts"],
+    }),
 
+    // updatePost
+    updatePost: builder.mutation({
+      query: (payload) => ({
+        url: `/posts/${payload.postId}`,
+        method: "PUT",
+        body: payload.data,
+      }),
+      invalidatesTags: ["posts"],
+    }),
+
+    // delete POST
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `posts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["post", "posts"],
+    }),
+    // find all post
     getAllPosts: builder.query({
       query: (data) => {
         const query = `${data ? `?category=${data}` : ""}`;
@@ -15,8 +42,7 @@ const postsApi = baseApi.injectEndpoints({
       providesTags: ["posts"],
     }),
 
-    // find single product
-
+    // find single post
     getAProduct: builder.query({
       query: (postId) => ({
         url: `/posts/${postId}`,
@@ -25,8 +51,16 @@ const postsApi = baseApi.injectEndpoints({
       providesTags: ["post"],
     }),
 
-    // upVotes=
+    // FindUserPostAllData
+    getMyPostAll: builder.query({
+      query: () => ({
+        url: `/posts/my-post`,
+        method: "GET",
+      }),
+      providesTags: ["posts"],
+    }),
 
+    // upVotes=
     upVotes: builder.mutation({
       query: (postId) => {
         return {
@@ -38,7 +72,6 @@ const postsApi = baseApi.injectEndpoints({
     }),
 
     // upVotes
-
     downVotes: builder.mutation({
       query: (postId) => {
         return {
@@ -52,8 +85,12 @@ const postsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useAddPostMutation,
+  useUpdatePostMutation,
   useGetAllPostsQuery,
   useGetAProductQuery,
+  useGetMyPostAllQuery,
   useUpVotesMutation,
   useDownVotesMutation,
+  useDeletePostMutation,
 } = postsApi;

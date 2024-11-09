@@ -1,5 +1,5 @@
+import AdminSidebar from "@/components/pages/admin/AdminSidebar";
 import ProfileHeder from "@/components/pages/profile/ProfileHeder";
-import UserSideBar from "@/components/Shared/UserSideBar";
 import { getToken } from "@/utils/actions/auth";
 import { ReactNode } from "react";
 
@@ -8,7 +8,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex min-h-screen max-w-screen-2xl mx-auto ">
       <div className="lg:block lg:w-1/4 bg-white">
-        <UserSideBar token={token} />
+        <AdminSidebar token={token} />
       </div>
       <div className="w-full lg:w-3/4">
         <ProfileHeder />

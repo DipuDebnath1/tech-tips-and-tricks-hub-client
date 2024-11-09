@@ -189,8 +189,6 @@ const PostCard = ({
     }
   };
 
-  console.log({ user, post });
-
   return (
     <div
       className={`max-w-xl mx-auto p-6 border bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative ${

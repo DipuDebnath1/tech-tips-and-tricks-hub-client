@@ -3,6 +3,7 @@ export type TUserWithFollowers = {
   email: string;
   img: string;
   isBlocked: boolean;
+  isDeleted: boolean;
   isPremium: boolean;
   isVerified: boolean;
   name: string;
@@ -20,6 +21,7 @@ export type TUser = {
   email: string;
   img: string;
   isBlocked: boolean;
+  isDeleted: boolean;
   isPremium: boolean;
   isVerified: boolean;
   name: string;

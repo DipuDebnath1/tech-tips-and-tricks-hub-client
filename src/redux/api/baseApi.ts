@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Define a service using a base URL and expected endpoints
 export const baseApi = createApi({
   reducerPath: "pokemonApi",
-  tagTypes: ["posts", "post", "comment", "user"],
+  tagTypes: ["posts", "post", "comment", "user", "admin"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:5000/api",
     prepareHeaders: async (headers) => {

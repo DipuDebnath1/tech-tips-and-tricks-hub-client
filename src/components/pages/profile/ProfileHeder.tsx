@@ -55,11 +55,11 @@ const ProfileHeder = () => {
                 )}
               </h2>
               <p className="space-x-4">
-                <Link href="/user/dashboard/following">
+                <Link href={`/${user?.role}/dashboard/following`}>
                   <span className="hover:underline">following</span>{" "}
                   {user.totalFollowing?.length}
                 </Link>
-                <Link href="/user/dashboard/follower">
+                <Link href={`/${user?.role}/dashboard/follower`}>
                   <span className="hover:underline">follower</span>
                 </Link>{" "}
                 {user.totalFollower?.length}

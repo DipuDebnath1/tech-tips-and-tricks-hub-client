@@ -28,7 +28,7 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["user", "posts"],
     }),
-    // follow
+    //un follow
     unFollow: builder.mutation({
       query: (data) => ({
         url: "/auth/un-following",

@@ -138,7 +138,6 @@ export function UpdatePost({ postData }: { postData: TPost }) {
           <div>
             <TinyMCEEditor
               onChange={handleDescriptionEditorChange}
-              value={postData.content}
               height={150}
               toolbar="undo redo | bold italic | alignleft aligncenter"
             />

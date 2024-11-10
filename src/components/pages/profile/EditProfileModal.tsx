@@ -65,11 +65,7 @@ export function EditProfile({ title, icon }: { title: string; icon: boolean }) {
       const res = await updateUseProfile(userData).unwrap();
       if (res.success) {
         toast.success(res.message || "profile Update success");
-        setUserData({
-          name: "",
-          phone: "",
-          img: "",
-        });
+        setUserData({});
       }
     } catch (err: any) {
       toast.error(err.message || "post added Failed !!");

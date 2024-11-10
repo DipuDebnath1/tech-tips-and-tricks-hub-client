@@ -7,7 +7,8 @@ export const baseApi = createApi({
   reducerPath: "pokemonApi",
   tagTypes: ["posts", "post", "comment", "user", "admin"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api",
+    // baseUrl: "http://localhost:5000/api",
+    baseUrl: "https://tech-tips-and-tricks-hub-server-nu.vercel.app/api",
     prepareHeaders: async (headers) => {
       const token = await getToken();
       // If we have a token set in state, let's assume that we should be passing it.

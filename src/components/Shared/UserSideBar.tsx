@@ -1,7 +1,7 @@
 "use client";
 import { useUserDataQuery } from "@/redux/api/userApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setUser } from "@/redux/userSlice";
+import { setToken, setUser } from "@/redux/userSlice";
 import { TokenDecode } from "@/utils/tokenDecode";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,9 +12,12 @@ const UserSideBar = ({ token }: { token: string }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userSlice.user);
-
   const { data, isLoading } = useUserDataQuery(decodeToken._id);
 
+  // set token in state
+  if (token) {
+    dispatch(setToken(token));
+  }
   useEffect(() => {
     if (data?.success) {
       dispatch(setUser(data.data));
@@ -80,7 +83,7 @@ const UserSideBar = ({ token }: { token: string }) => {
             <li className="pt-3">
               <Link
                 className="block bg-gray-100 py-2 px-5 rounded"
-                href={"/user/dashboard"}
+                href={"/user/dashboard/verify-apply"}
               >
                 Apply Verify
               </Link>

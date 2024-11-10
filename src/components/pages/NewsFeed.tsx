@@ -6,11 +6,18 @@ import PostCard from "../Shared/PostCard";
 import { useCallback, useEffect, useState } from "react";
 import { allCategory } from "@/utils/const-data/category";
 import { useGetAllPostsQuery } from "@/redux/api/postsApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { setToken } from "@/redux/userSlice";
 
 const NewsFeed = ({ token }: { token: string }) => {
   const [category, setCategory] = useState("");
   const { data, isLoading } = useGetAllPostsQuery(category);
   const [posts, setPosts] = useState<TPost[]>([]);
+  const dispatch = useAppDispatch();
+
+  if (token) {
+    dispatch(setToken(token));
+  }
 
   useEffect(() => {
     if (Array.isArray(data?.data)) {

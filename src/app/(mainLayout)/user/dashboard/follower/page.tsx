@@ -14,6 +14,12 @@ import Image from "next/image";
 const Follower = () => {
   const user = useAppSelector((state) => state.userSlice.user);
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center">loading user </div>
+    );
+  }
+
   return (
     user &&
     user?.totalFollower.length !== undefined &&

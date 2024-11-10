@@ -1,19 +1,22 @@
 "use client";
 import { useUserDataQuery } from "@/redux/api/userApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setUser } from "@/redux/userSlice";
+import { setToken, setUser } from "@/redux/userSlice";
 import { TokenDecode } from "@/utils/tokenDecode";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const AdminSidebar = ({ token }: { token: string }) => {
   const decodeToken = TokenDecode(token);
-  // const [user, setUser] = useState<TUser>();
   const [showSidebar, setShowSidebar] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userSlice.user);
-
   const { data, isLoading } = useUserDataQuery(decodeToken._id);
+
+  // set token in state
+  if (token) {
+    dispatch(setToken(token));
+  }
 
   useEffect(() => {
     if (data?.success) {
@@ -74,9 +77,17 @@ const AdminSidebar = ({ token }: { token: string }) => {
             <li className="pt-3">
               <Link
                 className="block bg-gray-100 py-2 px-5 rounded"
-                href={"/admin/dashboard/manage-content"}
+                href={"/admin/dashboard/active-content"}
               >
-                Manage Content
+                Manage Active Content
+              </Link>
+            </li>
+            <li className="pt-3">
+              <Link
+                className="block bg-gray-100 py-2 px-5 rounded"
+                href={"/admin/dashboard/deleted-content"}
+              >
+                Manage Deleted Content
               </Link>
             </li>
           </ul>

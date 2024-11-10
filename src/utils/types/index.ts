@@ -44,6 +44,7 @@ export interface TPost {
   tags: string[];
   isPremium: boolean;
   isDeleted?: boolean;
+  deletedBy?: "admin" | "user";
   upVotes: string[];
   downVotes: string[];
   comments: number;

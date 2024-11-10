@@ -15,46 +15,22 @@ import { toast } from "sonner";
 import Swal from "sweetalert2";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Comments from "./Comments";
 import { useAddCommentMutation } from "@/redux/api/commentApi";
-import { UpdatePost } from "./UpdatePost";
-import {
-  useFollowMutation,
-  useUnFollowMutation,
-  useUserDataQuery,
-} from "@/redux/api/userApi";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setUser } from "@/redux/userSlice";
-import { TokenDecode } from "@/utils/tokenDecode";
+import { useFollowMutation, useUnFollowMutation } from "@/redux/api/userApi";
+import { useAppSelector } from "@/redux/hooks";
+import Comments from "@/components/Shared/Comments";
 
-const PostCard = ({
-  data,
-  comment,
-  token,
-}: {
-  data: TPost;
-  comment?: true;
-  token?: string;
-}) => {
-  const decodeToken = TokenDecode(token || "");
+const AdminPostCard = ({ data, comment }: { data: TPost; comment?: true }) => {
   const [post, setPost] = useState<TPost>(data);
   const [showCommentBox, setShowCommentBox] = useState<boolean>(false);
   const router = useRouter();
   const user = useAppSelector((state) => state.userSlice.user);
-  const dispatch = useAppDispatch();
   const [addComment, { isLoading }] = useAddCommentMutation();
   const [upVote] = useUpVotesMutation();
   const [downVote] = useDownVotesMutation();
   const [follow] = useFollowMutation();
   const [unFollow] = useUnFollowMutation();
   const [deletePost] = useDeletePostMutation();
-  const { data: res } = useUserDataQuery(decodeToken._id);
-
-  useEffect(() => {
-    if (res?.success) {
-      dispatch(setUser(res.data));
-    }
-  }, [res]);
 
   useEffect(() => {
     setPost(data);
@@ -73,10 +49,8 @@ const PostCard = ({
       return router.push("/login");
     }
     try {
-      const updateUpVote = [...post.upVotes, user?._id];
-      const updateDownVote = post.downVotes.filter(
-        (item) => item !== user?._id
-      );
+      const updateUpVote = [...post.upVotes, user._id];
+      const updateDownVote = post.downVotes.filter((item) => item !== user._id);
       setPost({
         ...post,
         upVotes: [...updateUpVote],
@@ -95,8 +69,8 @@ const PostCard = ({
       return router.push("/login");
     }
     try {
-      const updateDownVote = [...post.downVotes, user?._id];
-      const updateUpVote = post.upVotes.filter((item) => item !== user?._id);
+      const updateDownVote = [...post.downVotes, user._id];
+      const updateUpVote = post.upVotes.filter((item) => item !== user._id);
       setPost({
         ...post,
         downVotes: [...updateDownVote],
@@ -244,9 +218,8 @@ const PostCard = ({
                 </span>
               )}
 
-            {user && user._id == post.author._id && !post.isDeleted && (
+            {!post.isDeleted && (
               <>
-                <UpdatePost postData={post} />
                 <button
                   onClick={() => handleDelete(post._id)}
                   className="text-red-600 underline cursor-pointer text-sm flex items-center gap-1"
@@ -269,10 +242,11 @@ const PostCard = ({
                 </button>
               </>
             )}
+            {/* delete content title  */}
             {post?.isDeleted && (
               <span className="text-red-500 font-semibold">
                 {" "}
-                Deleted Post {post.deletedBy === "admin" && "by Admin"}
+                Deleted by {post.deletedBy}
               </span>
             )}
           </div>
@@ -418,4 +392,4 @@ const PostCard = ({
   );
 };
 
-export default PostCard;
+export default AdminPostCard;

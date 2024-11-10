@@ -31,6 +31,12 @@ const Following = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center">loading user </div>
+    );
+  }
+
   return (
     user &&
     user?.totalFollowing.length !== undefined &&

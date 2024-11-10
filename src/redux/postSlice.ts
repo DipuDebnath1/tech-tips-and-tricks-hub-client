@@ -2,11 +2,11 @@ import { TPost } from "@/utils/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TInitialState = {
-  post: null | TPost[];
+  posts: null | TPost[];
 };
 
 const initialState: TInitialState = {
-  post: null,
+  posts: null,
 };
 
 export const postSlice = createSlice({
@@ -14,7 +14,7 @@ export const postSlice = createSlice({
   initialState,
   reducers: {
     addPosts: (state, action: PayloadAction<TPost[]>) => {
-      state.post = action.payload;
+      state.posts = action.payload;
     },
   },
 });

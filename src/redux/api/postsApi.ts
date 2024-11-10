@@ -60,6 +60,18 @@ const postsApi = baseApi.injectEndpoints({
       providesTags: ["posts"],
     }),
 
+    // find all post
+    getAllDeletedPosts: builder.query({
+      query: (data) => {
+        const query = `${data ? `?category=${data}` : ""}`;
+        return {
+          url: `/posts/deleted-posts${query}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["posts"],
+    }),
+
     // upVotes=
     upVotes: builder.mutation({
       query: (postId) => {
@@ -90,6 +102,7 @@ export const {
   useGetAllPostsQuery,
   useGetAProductQuery,
   useGetMyPostAllQuery,
+  useGetAllDeletedPostsQuery,
   useUpVotesMutation,
   useDownVotesMutation,
   useDeletePostMutation,

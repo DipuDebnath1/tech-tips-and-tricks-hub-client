@@ -6,14 +6,14 @@ import Link from "next/link";
 import { LoginUser } from "@/utils/actions/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/userSlice";
+import { setToken, setUser } from "@/redux/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const Login = () => {
 
     if (res.success) {
       dispatch(setUser(res.data));
-      localStorage.setItem("userToken", res?.token);
+      dispatch(setToken(res.token));
       router.push("/");
       return;
     } else {

@@ -55,6 +55,14 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["admin"],
     }),
+    // payment
+    paymentRequest: builder.mutation({
+      query: (data) => ({
+        url: `/payment`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +73,5 @@ export const {
   useDeleteUserMutation,
   useRestoreUserMutation,
   useChangeRoleMutation,
+  usePaymentRequestMutation,
 } = userApi;

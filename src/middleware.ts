@@ -2,27 +2,46 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { TokenDecode } from "./utils/tokenDecode";
 
-// This function can be marked `async` if using `await` inside
+const authPaths = ["/login", "/register"];
+
 export function middleware(request: NextRequest) {
-  console.log(request.cookies.get("userToken")?.value);
+  const { pathname } = request.nextUrl;
   const token = request.cookies.get("userToken")?.value;
-  // have not token
+
+  // Redirect to login if there's no token
   if (!token) {
+    console.log(token);
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  const user = TokenDecode(token);
-  console.log(request);
 
-  // invalid token
+  // Decode the token to get user details
+  const user = TokenDecode(token);
+
+  // Redirect to login if token decoding fails
   if (!user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Prevent authenticated users from accessing /login and /register
+  if (authPaths.includes(pathname) && !token) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Restrict access to /user paths for non-users
+  if (pathname.startsWith("/user") && user.role !== "user") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Restrict access to /admin paths for non-admins
+  if (pathname.startsWith("/admin") && user.role !== "admin") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Allow the request to continue if the token and role are valid
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
+// Matcher configuration with corrected paths
 export const config = {
-  //   matcher: "/about/:path*",
-  matcher: ["/dashboard", "/profile/:path*"],
+  matcher: ["/", "/admin/:path*", "/user/:path*"],
 };

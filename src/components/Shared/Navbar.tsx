@@ -80,16 +80,7 @@ const Navbar = ({ token }: any) => {
                 </figure>
 
                 {userMenu && (
-                  <div className="absolute top-[75px] right-0 bg-gray-50 border rounded w-32">
-                    <p>
-                      <Link
-                        className="block py-2 border-b px-4 hover:bg-gray-100"
-                        href={"/profile/me"}
-                        onClick={() => setUserMenu(!userMenu)}
-                      >
-                        Profile
-                      </Link>
-                    </p>
+                  <div className="absolute top-[75px] right-0 bg-gray-50 border z-50 rounded w-32">
                     <p>
                       <Link
                         className="block py-2 border-b px-4 hover:bg-gray-100"
@@ -200,17 +191,7 @@ const Navbar = ({ token }: any) => {
                   Contact
                 </Link>
               </li>
-              {user && (
-                <li className="border-b ">
-                  <Link
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                    href={"/profile/me"}
-                  >
-                    Profile
-                  </Link>
-                </li>
-              )}
+
               {user ? (
                 <li>
                   <p

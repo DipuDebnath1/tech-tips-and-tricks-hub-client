@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ImageUpload } from "@/utils/imageUpload";
+import { toast } from "sonner";
+import { RegisterUser } from "@/utils/actions/auth";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     phone: "",
-    img: null as File | null,
+    img: "",
   });
-  const [imgPreview, setImgPreview] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,23 +28,41 @@ const Register = () => {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        img: file,
-      }));
-      // Generate a local URL for the image preview
-      setImgPreview(URL.createObjectURL(file));
+  // image upload
+  const handleImageUpload = async (e: any) => {
+    try {
+      // local url
+      const imageLink = await ImageUpload(e);
+      // const localUrl = URL.createObjectURL(e);
+      if (imageLink) {
+        setFormData((prevData) => ({
+          ...prevData,
+          img: imageLink,
+        }));
+      }
+      // console.log(e);
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const res = await RegisterUser(formData);
+      if (res.success) {
+        toast.success(res.message || " user create success");
+        return router.push("/login");
+      } else {
+        return toast.error(res.message || " user create failed");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "user create failed");
+    }
     // Form submission logic goes here
     console.log(formData);
   };
+  console.log(formData);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -96,17 +119,17 @@ const Register = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => handleImageUpload(e.target.files?.[0])}
               required
               className="w-full bg-white border border-gray-300 rounded-md p-2"
             />
           </div>
           {/* Image preview */}
-          {imgPreview && (
+          {formData.img && (
             <div className="mb-4">
               <figure>
                 <Image
-                  src={imgPreview}
+                  src={formData.img}
                   alt="Image Preview"
                   className=" rounded-md"
                   width={200}

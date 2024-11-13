@@ -77,3 +77,11 @@ export interface TPostData {
   tags?: [string];
   isPremium?: boolean;
 }
+
+export type TMonthlyPaymentData = {
+  _id: {
+    year: number;
+    month: number;
+  };
+  totalAmount: number;
+};

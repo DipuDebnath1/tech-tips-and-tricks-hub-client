@@ -63,6 +63,13 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    // getMonthlyPayment
+    getMonthlyPayment: builder.query({
+      query: () => ({
+        url: `/payment/monthly-payments`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -74,4 +81,5 @@ export const {
   useRestoreUserMutation,
   useChangeRoleMutation,
   usePaymentRequestMutation,
+  useGetMonthlyPaymentQuery,
 } = userApi;

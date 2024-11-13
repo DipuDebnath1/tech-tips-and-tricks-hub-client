@@ -61,7 +61,8 @@ const Login = () => {
             <Button type="submit" className="w-full">
               Sign In
             </Button>
-            <p className="mt-4">
+            <p className="mt-2 text-blue-500"> forget password ? </p>
+            <p className="mt-2">
               {`${`haven't`}`} a account please{" "}
               <Link className="font-semibold text-blue-500" href={`/register`}>
                 Sign Up

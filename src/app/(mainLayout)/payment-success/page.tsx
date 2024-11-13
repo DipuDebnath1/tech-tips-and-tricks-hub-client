@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const PaymentSuccessPage = async ({ searchParams }: any) => {
   const res = await fetch(
+    // `https://tech-tips-and-tricks-hub-server-nu.vercel.app/api/payment/success?txnId=TXN-1731312725414`,
     `https://tech-tips-and-tricks-hub-server-nu.vercel.app/api/payment/success?txnId=${searchParams.txnId}`,
     // `http://localhost:5000/api/payment/success?txnId=${searchParams.txnId}`,
     {
@@ -13,7 +14,7 @@ const PaymentSuccessPage = async ({ searchParams }: any) => {
   );
   const data = await res.json();
 
-  console.log(data);
+  // console.log(data);
 
   if (!data.data) {
     return <div>no payment info exist </div>;

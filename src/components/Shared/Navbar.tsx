@@ -125,91 +125,95 @@ const Navbar = ({ token }: any) => {
       </div>
 
       {/* submenu  */}
-      {showMenu && (
-        <div className="absolute top-0 right-0 w-[20rem] min-h-screen bg-gray-100 py-5">
-          <header className="flex justify-between items-center px-5">
-            <h1
-              style={{ fontFamily: "cursive" }}
-              className="text-2xl font-semibold "
+      {/* {showMenu && ( */}
+      <div
+        className={`${
+          showMenu ? "block" : "hidden"
+        } absolute top-0 right-0 w-[20rem] min-h-screen bg-gray-100 py-5 md:hidden`}
+      >
+        <header className="flex justify-between items-center px-5">
+          <h1
+            style={{ fontFamily: "cursive" }}
+            className="text-2xl font-semibold "
+          >
+            <Link href={"/"}>TechInfo</Link>
+          </h1>
+          <p onClick={() => setShowMenu(!showMenu)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="size-6"
             >
-              <Link href={"/"}>TechInfo</Link>
-            </h1>
-            <p onClick={() => setShowMenu(!showMenu)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="size-6"
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </p>
+        </header>
+        <nav>
+          <ul className="flex flex-col pt-5">
+            <li className="border ">
+              <Link
+                onClick={() => setShowMenu(!showMenu)}
+                className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
+                href={"/"}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </p>
-          </header>
-          <nav>
-            <ul className="flex flex-col pt-5">
-              <li className="border ">
-                <Link
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                  href={"/"}
-                >
-                  News Feed
-                </Link>
-              </li>
-              {user && (
-                <li className="border-b ">
-                  <Link
-                    onClick={() => setShowMenu(!showMenu)}
-                    className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                    href={`/${user.role}/dashboard`}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
+                News Feed
+              </Link>
+            </li>
+            {user && (
               <li className="border-b ">
                 <Link
                   onClick={() => setShowMenu(!showMenu)}
                   className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                  href={"/about"}
+                  href={`/${user.role}/dashboard`}
                 >
-                  About
+                  Dashboard
                 </Link>
               </li>
-              <li className="border-b ">
-                <Link
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
-                  href={"/contact"}
-                >
-                  Contact
-                </Link>
-              </li>
+            )}
+            <li className="border-b ">
+              <Link
+                onClick={() => setShowMenu(!showMenu)}
+                className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
+                href={"/about"}
+              >
+                About
+              </Link>
+            </li>
+            <li className="border-b ">
+              <Link
+                onClick={() => setShowMenu(!showMenu)}
+                className="py-2 px-4 hover:bg-gray-50 cursor-pointer block"
+                href={"/contact"}
+              >
+                Contact
+              </Link>
+            </li>
 
-              {user ? (
-                <li>
-                  <p
-                    onClick={handleLogout}
-                    className="py-2 px-4 hover:bg-red-500 cursor-pointer block border-b text-center bg-red-400 text-white"
-                  >
-                    Sign Out
-                  </p>
-                </li>
-              ) : (
-                <li>
-                  <Link href={"/login"}>SignIn</Link>
-                </li>
-              )}
-            </ul>
-          </nav>
-        </div>
-      )}
+            {user ? (
+              <li>
+                <p
+                  onClick={handleLogout}
+                  className="py-2 px-4 hover:bg-red-500 cursor-pointer block border-b text-center bg-red-400 text-white"
+                >
+                  Sign Out
+                </p>
+              </li>
+            ) : (
+              <li>
+                <Link href={"/login"}>SignIn</Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+      </div>
+      {/* // )} */}
     </header>
   );
 };
